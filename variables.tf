@@ -18,7 +18,7 @@ EOT
     resource_group_name           = string
     scale_units                   = number
     virtual_hub_id                = string
-    allow_non_virtual_wan_traffic = optional(bool, false)
+    allow_non_virtual_wan_traffic = optional(bool) # Default: false
     tags                          = optional(map(string))
   }))
 }
