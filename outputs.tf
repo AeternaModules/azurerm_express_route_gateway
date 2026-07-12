@@ -1,3 +1,7 @@
+output "express_route_gateways_id" {
+  description = "Map of id values across all express_route_gateways, keyed the same as var.express_route_gateways"
+  value       = { for k, v in azurerm_express_route_gateway.express_route_gateways : k => v.id }
+}
 output "express_route_gateways_allow_non_virtual_wan_traffic" {
   description = "Map of allow_non_virtual_wan_traffic values across all express_route_gateways, keyed the same as var.express_route_gateways"
   value       = { for k, v in azurerm_express_route_gateway.express_route_gateways : k => v.allow_non_virtual_wan_traffic }
