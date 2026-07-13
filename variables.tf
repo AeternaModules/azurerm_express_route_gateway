@@ -18,29 +18,16 @@ EOT
     resource_group_name           = string
     scale_units                   = number
     virtual_hub_id                = string
-    allow_non_virtual_wan_traffic = optional(bool) # Default: false
+    allow_non_virtual_wan_traffic = optional(bool)
     tags                          = optional(map(string))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.express_route_gateways : (
-        length(v.name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.express_route_gateways : (
-        v.scale_units >= 1 && v.scale_units <= 10
-      )
-    ])
-    error_message = "must be between 1 and 10"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_express_route_gateway's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
   # Review, translate into a real validation{} block above, and delete once confirmed.
+  # path: name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: location
   #   source:    location.EnhancedValidate: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
   # path: resource_group_name
@@ -61,6 +48,9 @@ EOT
   #   source:    [from virtualwans.ValidateVirtualHubID] !ok
   # path: virtual_hub_id
   #   source:    [from virtualwans.ValidateVirtualHubID] err != nil
+  # path: scale_units
+  #   condition: value >= 1 && value <= 10
+  #   message:   must be between 1 and 10
   # path: tags
   #   condition: length(value) <= 50
   #   message:   [from tags.Validate: invalid when len(value) > 50]
